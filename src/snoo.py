@@ -55,6 +55,7 @@ def main(_bg_color: tuple[int, int, int]):
 
 
 if __name__ == '__main__':
+    from pathlib import Path
     # file = GetPath('snoo.py')
     # print(file.get_path())
 
