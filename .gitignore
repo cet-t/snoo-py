@@ -1,2 +1,3 @@
-﻿__pycache__/
-.vscode/
+﻿# スペルチェッカー再設定めんどくさいから
+# .vscode/
+__pycache__/
