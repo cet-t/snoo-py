@@ -3,6 +3,7 @@ from pygame.locals import *
 from typing import Any
 import os
 import sys
+from pynput import keyboard
 
 
 class GetPath:
@@ -45,11 +46,33 @@ window_settings: dict[str, Any] = {
 }
 
 
+class MonKeyBoard:
+    def on_press(self, key):
+        return key
+
+    def on_release(self, key):
+        return key
+
+    def start(self):
+        self.listener = keyboard.Listener(
+            on_press=self.on_press,
+            on_release=self.on_release
+        )
+        self.listener.start()
+
+    def getstatus(self):
+        if (self.listener == None):
+            return False
+        return True
+
+
 def main() -> None:
     screen = Mine.window_init(
         window_settings['title'], window_settings['size'])
 
     font = Mine.font_setting(50)
+    key_input = MonKeyBoard()
+    key_input.start()
 
     while True:
         screen.fill(color=window_settings['bg_color'])
@@ -64,9 +87,16 @@ def main() -> None:
         text = font.render(
             pressed_key_str, True, (255, 255, 255))
         screen.blit(text, (10, 10))
+        for e in pygame.event.get():
+            if e.type == KEYDOWN:
+                key_name = pygame.key.name(e.key)
+                print(key_name)
+                text = font.render(
+                    key_name, True, (128, 128, 128))
+                screen.blit(source=text, dest=[332, 187])
+        status = key_input.getstatus()
+        if not status:
+            print("break")
+            break
 
         pygame.display.update()
-
-
-if __name__ == '__main__':
-    main()
