@@ -2,15 +2,13 @@
 from pygame.locals import *
 import sys
 import typing
-# import my as mine
-
-type_rgb = tuple[int, int, int]
+# from my import *
 
 # sys.path.append('./my.py')
 
-screen_settings: dict[str, typing.Any] = {
+window_settings: dict[str, typing.Any] = {
     'title': 'Snoopy',
-    'size': (1280, 720),
+    'size': (664, 374),  # 16:9
     'bg_color': (32, 107, 0)
 }
 
@@ -33,14 +31,14 @@ class mine:
                 sys.exit()
 
 
-def main(_background_rgb: type_rgb):
-    screen = mine.screen_init(
-        screen_settings['title'], screen_settings['size'])
+def main(_bg_color: tuple[int, int, int]):
+    screen = mine.window_init(
+        window_settings['title'], window_settings['size'])
 
     while True:
-        screen.fill(_background_rgb)
+        screen.fill(_bg_color)
         mine.app_quit()
 
 
 if __name__ == '__main__':
-    main(screen_settings['bg_color'])
+    main(window_settings['bg_color'])
