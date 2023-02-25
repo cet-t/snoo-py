@@ -1,44 +1,61 @@
 ﻿import pygame
 from pygame.locals import *
-import sys
 import typing
-# from my import *
-
-# sys.path.append('./my.py')
-
-window_settings: dict[str, typing.Any] = {
-    'title': 'Snoopy',
-    'size': (664, 374),  # 16:9
-    'bg_color': (32, 107, 0)
-}
+import os
+from cree import *
+import sys
 
 
-class mine:
-    def screen_init(
-        _window_title: str,
-        _resolutions: tuple[int, int]
+class GetPath:
+    def __init__(self, file_name: str):
+        self.file_name = file_name
+
+    def get_path(self) -> str:
+        return os.path.abspath(self.file_name)
+        # return './{}'.format(os.path.basename(self.file_name))
+
+
+class Mine:
+    def window_init(
+        window_title: str,
+        resolution: tuple[int, int]
     ) -> pygame.Surface:
         pygame.init()
-        pygame.display.set_caption(_window_title)
-        return pygame.display.set_mode(_resolutions)
+        pygame.display.set_caption(window_title)
+        return pygame.display.set_mode(resolution)
 
     def app_quit():
         for e in pygame.event.get():
-            if e.type == QUIT or (
-                e.type == KEYDOWN and e.type == K_ESCAPE
-            ):
+            if e.type == QUIT:
                 pygame.quit()
                 sys.exit()
 
+    def font_setting(font_size: int):
+        return pygame.font.Font(None, font_size)
+
 
 def main(_bg_color: tuple[int, int, int]):
-    screen = mine.window_init(
+    screen = Mine.window_init(
         window_settings['title'], window_settings['size'])
+
+    font = Mine.font_setting(30)
 
     while True:
         screen.fill(_bg_color)
-        mine.app_quit()
+        pygame.display.update()
+        Mine.app_quit()
+
+        for e in pygame.event.get():
+            if e.type == KEYDOWN:
+                key_name = pygame.key.name(e.key)
+                print(key_name)
+                text = font.render(
+                    key_name, True, (128, 128, 128))
+                screen.blit(source=text, dest=[332, 187])
 
 
 if __name__ == '__main__':
+    # file = GetPath('snoo.py')
+    # print(file.get_path())
+
     main(window_settings['bg_color'])
