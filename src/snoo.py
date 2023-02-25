@@ -58,7 +58,7 @@ def main() -> None:
         pressed_keys = pygame.key.get_pressed()
         pressed_key_names = [
             pygame.key.name(key)
-            for key, state in enumerate(pressed_keys) if state]
+            for key, state in enumerate(pressed_keys)if state]
         pressed_key_str = ' + '.join(pressed_key_names)
 
         text = font.render(pressed_key_str, True, (255, 255, 255))
