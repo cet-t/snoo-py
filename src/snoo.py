@@ -55,7 +55,6 @@ def main() -> None:
         screen.fill(color=window_settings['bg_color'])
         Mine.app_quit()
 
-        # プレスされているキーを取得し、表示する文字列を作成する
         pressed_keys = pygame.key.get_pressed()
         pressed_key_names = [
             pygame.key.name(key)
