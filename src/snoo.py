@@ -10,8 +10,8 @@ class GetPath:
         self.file_name = file_name
 
     def get_path(self) -> str:
-        return os.path.abspath(self.file_name)
-        # return './{}'.format(os.path.basename(self.file_name))
+        # return os.path.abspath(self.file_name)
+        return f'{os.path.basename(self.file_name)}'
 
 
 class Mine:
@@ -29,8 +29,8 @@ class Mine:
                 pygame.quit()
                 sys.exit()
 
-    def font_setting(font_size: int):
-        return pygame.font.SysFont(None, font_size)
+    def font_setting(font_size: int, is_bold: bool = False):
+        return pygame.font.SysFont(None, font_size, is_bold)
 
     def getstatus(self):
         if self.listener == None:
@@ -58,10 +58,11 @@ def main() -> None:
         pressed_keys = pygame.key.get_pressed()
         pressed_key_names = [
             pygame.key.name(key)
-            for key, state in enumerate(pressed_keys)if state]
+            for key, state in enumerate(pressed_keys) if state]
         pressed_key_str = ' + '.join(pressed_key_names)
 
-        text = font.render(pressed_key_str, True, (255, 255, 255))
+        text = font.render(
+            pressed_key_str, True, (255, 255, 255))
         screen.blit(text, (10, 10))
 
         pygame.display.update()
