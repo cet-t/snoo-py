@@ -1,8 +1,7 @@
 ﻿import pygame
 from pygame.locals import *
-import typing
+from typing import Any
 import os
-from cree import *
 import sys
 
 
@@ -31,32 +30,42 @@ class Mine:
                 sys.exit()
 
     def font_setting(font_size: int):
-        return pygame.font.Font(None, font_size)
+        return pygame.font.SysFont(None, font_size)
+
+    def getstatus(self):
+        if self.listener == None:
+            return False
+        return True
 
 
-def main(_bg_color: tuple[int, int, int]):
+window_settings: dict[str, Any] = {
+    'title': 'Snoopy',
+    'size': (664, 374),  # 16:9
+    'bg_color': (24, 27, 61)  # darkest navy
+}
+
+
+def main() -> None:
     screen = Mine.window_init(
         window_settings['title'], window_settings['size'])
 
-    font = Mine.font_setting(30)
+    font = Mine.font_setting(50)
 
     while True:
-        screen.fill(_bg_color)
-        pygame.display.update()
+        screen.fill(color=window_settings['bg_color'])
         Mine.app_quit()
 
-        for e in pygame.event.get():
-            if e.type == KEYDOWN:
-                key_name = pygame.key.name(e.key)
-                print(key_name)
-                text = font.render(
-                    key_name, True, (128, 128, 128))
-                screen.blit(source=text, dest=[332, 187])
+        pressed_keys = pygame.key.get_pressed()
+        pressed_key_names = [
+            pygame.key.name(key)
+            for key, state in enumerate(pressed_keys) if state]
+        pressed_key_str = ' + '.join(pressed_key_names)
+
+        text = font.render(pressed_key_str, True, (255, 255, 255))
+        screen.blit(text, (10, 10))
+
+        pygame.display.update()
 
 
 if __name__ == '__main__':
-    from pathlib import Path
-    # file = GetPath('snoo.py')
-    # print(file.get_path())
-
-    main(window_settings['bg_color'])
+    main()
