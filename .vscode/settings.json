@@ -4,6 +4,7 @@
     "KEYDOWN",
     "pygame",
     "pynput",
+    "Scancode",
     "snoo"
   ]
 }
