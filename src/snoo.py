@@ -5,6 +5,7 @@ from typing import Any
 import os
 import sys
 from pynput import keyboard
+from pynput.keyboard import Listener
 import pynput
 from enum import Enum
 
@@ -25,31 +26,32 @@ class GetPath:
 
 
 class App:
-    def window(window_title: str, resolution: tuple[int, int]) -> pygame.Surface:
-        pygame.init()
-        pygame.display.set_caption(window_title)
-        return pygame.display.set_mode(resolution)
+    class Setting:
+        def window(_title: str, _res: tuple[int, int]) -> pygame.Surface:
+            pygame.init()
+            pygame.display.set_caption(_title)
+            return pygame.display.set_mode(_res)
 
-    def quit():
+        def font(font_size: int, is_bold: bool = False) -> pygame.font.SysFont:
+            return pygame.font.SysFont(None, font_size, is_bold)
+
+    def quit() -> None:
         for event in pygame.event.get():
             if event.type == K_ESCAPE and event.type == QUIT:
                 pygame.quit()
                 sys.exit()
 
-    def font(font_size: int, is_bold: bool = False) -> pygame.font.SysFont:
-        return pygame.font.SysFont(None, font_size, is_bold)
-
 
 class GetKey:
-    def on_press(self, key) -> keyboard.Key | keyboard.KeyCode:
+    def press(self, key) -> keyboard.Key | keyboard.KeyCode:
         return key
 
-    def on_release(self, key) -> keyboard.Key | keyboard.KeyCode:
+    def release(self, key) -> keyboard.Key | keyboard.KeyCode:
         return key
 
     def start(self) -> None:
-        self.listener = keyboard.Listener(
-            on_press=self.on_press, on_release=self.on_release)
+        self.listener = Listener(
+            on_press=self.press, on_release=self.release)
         self.listener.start()
 
     def get_status(self):
@@ -60,9 +62,10 @@ class GetKey:
 
 class Scene:
     class Settings:
-        TITLE = 'Snoo.py'
-        SIZE = (664, 374)
-        BG_COLOR = (24, 27, 61)
+        TITLE: str = "Snoo.py"
+        SIZE: tuple[int, int] = 664, 374
+        X, Y: int = SIZE
+        BG_COLOR: tuple[int, int, int] = 24, 27, 61
 
     def center():
         return Scene.Settings.SIZE / 2
@@ -70,8 +73,8 @@ class Scene:
 
 def main() -> None:
     screen: pygame.Surface = App.window(
-        window_title=Scene.Settings.TITLE,
-        resolution=Scene.Settings.SIZE
+        _title=Scene.Settings.TITLE,
+        _res=Scene.Settings.SIZE
     )
     font = App.font(50)
     key_input = GetKey()
