@@ -1,57 +1,57 @@
 ﻿import pygame
 from pygame.locals import *
+import typing
 from typing import Any
 import os
 import sys
 from pynput import keyboard
+from pynput.keyboard import Listener
+import pynput
+from enum import Enum
+
+
+class SceneState(Enum):
+    Title = 0,
+    Credit = 1,
+    Play = 2,
 
 
 class GetPath:
-    def __init__(self, file_name: str):
+    def __init__(self, file_name: str) -> typing.Any:
         self.file_name = file_name
+        GetPath.get_path()
 
     def get_path(self) -> str:
-        # return os.path.abspath(self.file_name)
-        return f'{os.path.basename(self.file_name)}'
+        return str(os.path.abspath(self.file_name))
 
 
-class Mine:
-    def window_init(
-        window_title: str,
-        resolution: tuple[int, int]
-    ) -> pygame.Surface:
-        pygame.init()
-        pygame.display.set_caption(window_title)
-        return pygame.display.set_mode(resolution)
+class App:
+    class Setting:
+        def window(_title: str, _res: tuple[int, int]) -> pygame.Surface:
+            pygame.init()
+            pygame.display.set_caption(_title)
+            return pygame.display.set_mode(_res)
 
-    def app_quit():
+        def font(font_size: int, is_bold: bool = False) -> pygame.font.SysFont:
+            return pygame.font.SysFont(None, font_size, is_bold)
+
+    def quit() -> None:
         for event in pygame.event.get():
-            if event.type == QUIT:
+            if event.type == K_ESCAPE and event.type == QUIT:
                 pygame.quit()
                 sys.exit()
 
-    def font_setting(font_size: int, is_bold: bool = False) -> pygame.font.SysFont:
-        return pygame.font.SysFont(None, font_size, is_bold)
-
-    def getstatus(self):
-        if self.listener == None:
-            return False
-        return True
-
 
 class GetKey:
-
-    def on_press(self, key) -> keyboard.Key | keyboard.KeyCode:
+    def press(self, key) -> keyboard.Key | keyboard.KeyCode:
         return key
 
-    def on_release(self, key) -> keyboard.Key | keyboard.KeyCode:
+    def release(self, key) -> keyboard.Key | keyboard.KeyCode:
         return key
 
-    def start(self):
-        self.listener = keyboard.Listener(
-            on_press=self.on_press,
-            on_release=self.on_release
-        )
+    def start(self) -> None:
+        self.listener = Listener(
+            on_press=self.press, on_release=self.release)
         self.listener.start()
 
     def get_status(self):
@@ -62,21 +62,21 @@ class GetKey:
 
 class Scene:
     class Settings:
-        TITLE: str = 'Snoo.py'
-        SIZE: tuple[int, int] = (664, 374)
-        BG_COLOR: tuple[int, int, int] = (24, 27, 61)
+        TITLE: str = "Snoo.py"
+        SIZE: tuple[int, int] = 664, 374
+        X, Y: int = SIZE
+        BG_COLOR: tuple[int, int, int] = 24, 27, 61
 
-    def center() -> tuple[int, int]:
+    def center():
         return Scene.Settings.SIZE / 2
 
 
 def main() -> None:
-    screen: pygame.Surface = Mine.window_init(
-        window_title=Scene.Settings.TITLE,
-        resolution=Scene.Settings.SIZE
+    screen: pygame.Surface = App.window(
+        _title=Scene.Settings.TITLE,
+        _res=Scene.Settings.SIZE
     )
-
-    font = Mine.font_setting(50)
+    font = App.font(50)
     key_input = GetKey()
     key_input.start()
 
@@ -86,7 +86,8 @@ def main() -> None:
         pressed_keys: pygame.ScancodeWrapper = pygame.key.get_pressed()
         pressed_key_names: list[str] = [
             pygame.key.name(key)
-            for key, state in enumerate(pressed_keys) if state]
+            for key, state in enumerate(pressed_keys) if state
+        ]
         pressed_key_str = ' + '.join(pressed_key_names)
 
         text: pygame.Surface = font.render(
@@ -103,8 +104,7 @@ def main() -> None:
         if not key_input.get_status():
             break
 
-        Mine.app_quit()
-
+        App.quit()
         pygame.display.update()
 
 
