@@ -4,9 +4,7 @@ import typing
 from typing import Any
 import os
 import sys
-from pynput import keyboard
-from pynput.keyboard import Listener
-import pynput
+from pynput.keyboard import Listener, Key, KeyCode
 from enum import Enum
 
 
@@ -37,21 +35,21 @@ class App:
 
     def quit() -> None:
         for event in pygame.event.get():
-            if event.type == K_ESCAPE and event.type == QUIT:
+            if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
 
 
 class GetKey:
-    def press(self, key) -> keyboard.Key | keyboard.KeyCode:
+    def on_pressed(self, key) -> Key | KeyCode:
         return key
 
-    def release(self, key) -> keyboard.Key | keyboard.KeyCode:
+    def on_released(self, key) -> Key | KeyCode:
         return key
 
-    def start(self) -> None:
+    def listen_start(self) -> None:
         self.listener = Listener(
-            on_press=self.press, on_release=self.release)
+            on_press=self.on_pressed, on_release=self.on_released)
         self.listener.start()
 
     def get_status(self):
@@ -62,9 +60,9 @@ class GetKey:
 
 class Scene:
     class Settings:
-        TITLE: str = "Snoo.py"
-        SIZE: tuple[int, int] = 664, 374
-        X, Y: int = SIZE
+        TITLE = "Snoo.py"
+        SIZE = 664, 374
+        X, Y = SIZE
         BG_COLOR: tuple[int, int, int] = 24, 27, 61
 
     def center():
@@ -73,21 +71,17 @@ class Scene:
 
 def main() -> None:
     screen: pygame.Surface = App.window(
-        _title=Scene.Settings.TITLE,
-        _res=Scene.Settings.SIZE
-    )
+        _title=Scene.Settings.TITLE, _res=Scene.Settings.SIZE)
     font = App.font(50)
     key_input = GetKey()
-    key_input.start()
+    key_input.listen_start()
 
     while True:
         screen.fill(color=Scene.Settings.BG_COLOR)
 
         pressed_keys: pygame.ScancodeWrapper = pygame.key.get_pressed()
         pressed_key_names: list[str] = [
-            pygame.key.name(key)
-            for key, state in enumerate(pressed_keys) if state
-        ]
+            pygame.key.name(key) for key, state in enumerate(pressed_keys) if state]
         pressed_key_str = ' + '.join(pressed_key_names)
 
         text: pygame.Surface = font.render(
